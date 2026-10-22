@@ -1,0 +1,1919 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>李颖｜个人网站</title>
+    
+    <!-- 字体引入 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Lato:wght@400;700&family=Quicksand:wght@700&display=swap" rel="stylesheet">
+
+    <style>
+        /* 1. 全局变量与重置 (CSS Variables) */
+        :root {
+            --bg-color: #E9F5EF;
+            --card-bg: #FFFFFF;
+            --line-color: #A98B79;
+            --accent-color: #E8A8B8;
+            --text-main: #383333;
+            --text-sub: #777777;
+            
+            --font-title: 'Quicksand', 'Microsoft YaHei', sans-serif;
+            --font-body: 'Lato', 'Helvetica Neue', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            
+            --mint: #A8E6CF;
+            --border-radius: 24px;
+            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+            
+            /* 手绘星光背景模拟 (通过CSS渐变绘制) */
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,0.8), rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.8), rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 90px 40px, rgba(255,255,255,0.8), rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 130px 80px, rgba(255,255,255,0.8), rgba(0,0,0,0)),
+                radial-gradient(3px 3px at 180px 120px, rgba(255,255,255,0.6), rgba(0,0,0,0));
+            background-size: 200px 200px;
+        }
+
+        /* 滚动条美化 */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--line-color);
+            border-radius: 10px;
+        }
+
+        /* 2. 通用组件 (Components) */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .section {
+            padding: 100px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-family: var(--font-title);
+            font-size: 2.5rem;
+            color: var(--text-main);
+            margin-bottom: 60px;
+            position: relative;
+        }
+
+        .section-title span {
+            color: var(--accent-color);
+        }
+
+        /* 手绘卡片风格 */
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            border: 2px dashed var(--line-color);
+            padding: 30px;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* 棕色格纹分割条 */
+        .divider {
+            width: 100%;
+            height: 40px;
+            background-image: 
+                linear-gradient(45deg, var(--line-color) 25%, transparent 25%, transparent 75%, var(--line-color) 75%, var(--line-color)),
+                linear-gradient(45deg, var(--line-color) 25%, transparent 25%, transparent 75%, var(--line-color) 75%, var(--line-color));
+            background-color: #fff;
+            background-position: 0 0, 10px 10px;
+            background-size: 20px 20px;
+            opacity: 0.8;
+            margin: 0;
+        }
+
+        /* 渐入动画类 */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* 装饰SVG样式 */
+        .deco-svg {
+            position: absolute;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* 3. 顶部导航栏 (Navigation) */
+        header {
+            position: sticky;
+            top: 20px;
+            z-index: 100;
+            padding: 0 20px;
+        }
+
+        .nav-container {
+            background: rgba(233, 245, 239, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 50px;
+            padding: 10px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            max-width: 1000px;
+            margin: 0 auto;
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+
+        .logo {
+            font-family: var(--font-title);
+            font-size: 1.2rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-main);
+            font-size: 0.95rem;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-color);
+        }
+
+        /* 4. Hero 首页模块 */
+        .hero {
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            padding-top: 40px;
+            position: relative;
+        }
+
+        .hero-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            gap: 50px;
+        }
+
+        .hero-text {
+            flex: 1;
+        }
+
+        .tag {
+            background: var(--accent-color);
+            color: #fff;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .hero h1 {
+            font-family: var(--font-title);
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            color: var(--text-main);
+        }
+
+        .hero h1 span {
+            color: var(--accent-color);
+        }
+
+        .hero .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-sub);
+            margin-bottom: 20px;
+            font-family: var(--font-mono);
+        }
+
+        .hero p {
+            color: var(--text-sub);
+            margin-bottom: 30px;
+            max-width: 500px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .btn {
+            padding: 12px 28px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: var(--text-main);
+            color: #fff;
+            border: 2px solid var(--text-main);
+        }
+        
+        .btn-primary:hover {
+            background: var(--accent-color);
+            border-color: var(--accent-color);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--text-main);
+            border: 2px solid var(--text-main);
+        }
+
+        .btn-outline:hover {
+            background: #fff;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 40px;
+        }
+
+        .stat-item h3 {
+            font-size: 2rem;
+            font-family: var(--font-title);
+            color: var(--accent-color);
+        }
+        
+        .stat-item p {
+            font-size: 0.8rem;
+            margin: 0;
+        }
+
+        .hero-image-area {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            position: relative;
+        }
+
+        .photo-frame {
+            width: 350px;
+            height: 350px;
+            background: #fff;
+            border-radius: 50%;
+            border: 4px dashed var(--line-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-sub);
+            position: relative;
+            box-shadow: var(--card-shadow);
+        }
+
+
+        
+        /* 豆沙粉色手绘下划线 */
+        .highlight-pink {
+            /* 定义一条粉色的线 */
+            background-image: linear-gradient(180deg, #E8A8B8 0%, #E8A8B8 100%);
+            /* 线条粗细 5px，水平不重复，定位在文字底部偏上位置 */
+            background-size: 100% 5px;
+            background-position: 0 88%;
+            background-repeat: no-repeat;
+            /* 确保文字颜色是主色（深色） */
+            color: var(--text-main);
+        }
+
+        /* 模拟荧光笔高亮效果（把线条加粗到 30% 高度，透明度降低） */
+        .highlight-marker {
+            background-image: linear-gradient(180deg, #E8A8B8 0%, #E8A8B8 10%);
+            background-size: 100% 60%;
+            background-position: 0 100%;
+            background-repeat: no-repeat;
+            color: var(--text-main);
+        /* 把线条放到文字后面 */
+            mix-blend-mode: multiply;
+            opacity: 0.6;
+        }
+
+        /* 5. 关于我 (About Me) */
+        .about-grid {
+            display: flex;
+            gap: 50px;
+            align-items: center;
+        }
+
+        .about-img-placeholder {
+            flex: 1;
+            height: 450px;
+            background: #fdfbf7;
+            border-radius: var(--border-radius);
+            border: 2px dashed var(--line-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-sub);
+            font-size: 0.9rem;
+            position: relative;
+        }
+
+        /* 关于我 · 多张照片滚动播放轮播 */
+        .about-carousel {
+            flex: 1;
+            position: relative;
+            height: 450px;
+            width: 300px;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            border: 2px dashed var(--line-color);
+            box-shadow: 0 0 0 6px var(--mint), 0 8px 24px rgba(255, 255, 255, 0.7);
+        }
+
+        .about-track {
+            display: flex;
+            height: 100%;
+            transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+        }
+
+        .about-slide {
+            flex: 0 0 100%;
+            height: 100%;
+            position: relative;
+            background: linear-gradient(135deg, #f4ede4 0%, #e9f5ef 100%);
+        }
+
+        .about-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            position: relative;
+            z-index: 2;
+        }
+
+        .about-slide .slide-tip {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-sub);
+            font-size: 0.9rem;
+            line-height: 1.8;
+        }
+
+        .slide-caption {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 3;
+            padding: 26px 18px 14px;
+            color: #fff;
+            font-size: 0.85rem;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(56, 51, 51, 0.55) 100%);
+        }
+
+        .about-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 4;
+            width: 38px;
+            height: 38px;
+            border: none;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.82);
+            color: var(--line-color);
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.25s, transform 0.25s;
+        }
+        .about-arrow:hover { background: #fff; transform: translateY(-50%) scale(1.08); }
+        .about-arrow.prev { left: 14px; }
+        .about-arrow.next { right: 14px; }
+
+        .about-dots {
+            position: absolute;
+            bottom: 12px;
+            left: 0;
+            right: 0;
+            z-index: 4;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+        }
+        .about-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.55);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            cursor: pointer;
+            transition: background 0.25s, transform 0.25s;
+        }
+        .about-dot.active { background: var(--accent-color); transform: scale(1.25); }
+
+        @media (max-width: 768px) {
+            .about-grid { flex-direction: column; gap: 30px; }
+            .about-carousel { height: 320px; width: 100%; }
+        }
+
+        .about-text {
+            flex: 1;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .info-item {
+            background: #fff;
+            padding: 15px 20px;
+            border-radius: 15px;
+            border: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .info-item strong {
+            display: block;
+            font-size: 0.7rem;
+            color: var(--text-sub);
+            margin-bottom: 2px;
+        }
+
+        /* 6. 技能板块 (Skills) */
+        .skills-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .skill-category h3 {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: var(--font-title);
+        }
+
+        .skill-bar {
+            margin-bottom: 20px;
+        }
+
+        .skill-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .progress-bg {
+            width: 100%;
+            height: 12px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--accent-color);
+            border-radius: 10px;
+            transition: width 1s ease-out;
+        }
+
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .tag-pill {
+            background: #fff;
+            border: 1px dashed var(--line-color);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: var(--text-main);
+        }
+
+
+        /* 7. 经历时间线 (Experience)  */
+.timeline {
+    position: relative;
+    max-width: 800px;
+    margin: 0 auto;
+    padding-left: 40px;          /* 给左边竖线和圆点腾出位置 */
+}
+
+.timeline::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 19px;                  /* 竖线固定到最左边*/
+    margin-left: 0;
+    width: 0;
+    border-left: 2px dashed var(--line-color);
+    background: transparent;
+}
+
+.timeline-item {
+    padding: 0 0 0 30px;         /* 方框左侧留空给圆点 */
+    position: relative;
+    width: 100%;                 /* 每个方框占满整行 */
+    margin-bottom: 40px;
+}
+
+.timeline-item.left,
+.timeline-item.right {
+    left: 0;
+}
+
+/* 圆点统一放到左边 */
+.timeline-item::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    left: -10px;                 /* 压在竖线上（原来 left 项是 right:-10px）*/
+    right: auto;
+    top: 18px;
+    background-color: var(--accent-color);
+    border: 4px solid var(--bg-color);
+    border-radius: 50%;
+    z-index: 1;
+}
+
+.timeline-item.right::after {
+    left: -10px;                 /* right 项的圆点也保持靠左 */
+}
+
+        .timeline-content {
+            padding: 20px;
+            border-radius: var(--border-radius);
+            border: 2px dashed var(--line-color);
+            background: #fff;
+        }
+
+        .timeline-date {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            background: var(--accent-color);
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: 10px;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .timeline-content h3 {
+            margin-bottom: 5px;
+        }
+        
+        .timeline-content h4 {
+            color: var(--text-sub);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            font-weight: normal;
+        }
+
+        .timeline-content ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .timeline-content li {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: var(--text-sub);
+        }
+
+        .timeline-content li::before {
+            content: '♥';
+            color: var(--accent-color);
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        /* 旅行记录 · 卡片内自由滑动相册 */
+        .travel-gallery {
+            margin: 4px 0 14px;
+        }
+        .travel-gallery .gallery-tip {
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            color: var(--text-sub);
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+        .travel-track {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            padding: 4px 2px 10px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent-color) transparent;
+        }
+        .travel-track::-webkit-scrollbar { height: 6px; }
+        .travel-track::-webkit-scrollbar-thumb {
+            background: var(--accent-color);
+            border-radius: 6px;
+        }
+        .travel-shot {
+            flex: 0 0 78%;
+            scroll-snap-align: center;
+            background: rgba(255, 255, 255, 0.7);
+            border: 2px solid var(--line-color);
+            border-radius: var(--border-radius);
+            padding: 6px;
+            box-shadow: 0 2px 6px rgba(56, 51, 51, 0.08);
+        }
+        .travel-shot .shot-frame {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 4 / 3;
+            overflow: hidden;
+            border-radius: calc(var(--border-radius) - 4px);
+            background: var(--bg-color);
+        }
+        .travel-shot .shot-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+        .travel-shot .shot-frame .shot-empty {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-sub);
+            line-height: 1.6;
+            padding: 12px;
+        }
+        .travel-shot .shot-cap {
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            color: var(--text-sub);
+            text-align: center;
+            margin-top: 6px;
+        }
+        .travel-dots {
+            display: flex;
+            justify-content: center;
+            gap: 7px;
+            margin-top: 2px;
+        }
+        .travel-dots .t-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--line-color);
+            cursor: pointer;
+            transition: transform 0.2s ease, background 0.2s ease;
+        }
+        .travel-dots .t-dot.active {
+            background: var(--accent-color);
+            transform: scale(1.3);
+        }
+        @media (max-width: 640px) {
+            .travel-shot { flex-basis: 86%; }
+        }
+
+        /* 8. 作品集 (Portfolio) */
+        /* 校园经历 · 大类分组 */
+.exp-category {
+    margin-bottom: 48px;
+}
+.exp-category:last-child {
+    margin-bottom: 0;
+}
+.exp-category-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--font-title);
+    font-size: 1.5rem;
+    color: var(--text-main);
+    margin-bottom: 26px;
+}
+.exp-category-title::before {
+    content: '';
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: var(--accent-color);
+    flex: 0 0 auto;
+}
+.exp-category-title::after {
+    content: '';
+    flex: 1;
+    border-bottom: 2px dashed var(--line-color);
+}
+
+.portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .project-card {
+            border-radius: var(--border-radius);
+            border: 2px dashed var(--line-color);
+            background: #fff;
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .project-img {
+            height: 200px;
+            background: #fdfbf7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-sub);
+            border-bottom: 1px dashed #eee;
+        }
+
+        /* 校园经历卡片配图：图片铺满顶部区域并自适应方框宽度 */
+        .project-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .project-img .img-hint {
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+
+        .project-content {
+            padding: 40px;
+        }
+
+        .project-content h3 {
+            margin-bottom: 30px;
+        }
+
+        .project-content p {
+            font-size: 1.1rem;
+            color: var(--text-sub);
+            margin-bottom: 15px;
+            min-height: 40px;
+        }
+
+        .project-tags {
+            font-size:20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .mini-tag {
+            background: var(--bg-color);
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-size: 0.7rem;
+            color: var(--text-main);
+        }
+
+        /* 9. 联系与 Footer */
+        .contact-card {
+            text-align: center;
+            padding: 60px 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .contact-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .contact-link {
+            background: #fff;
+            padding: 10px 20px;
+            border-radius: 20px;
+            border: 1px dashed var(--line-color);
+            text-decoration: none;
+            color: var(--text-main);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            font-size: 0.8rem;
+            color: var(--text-sub);
+            margin-top: 50px;
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            .hero-content, .about-grid {
+                flex-direction: column;
+            }
+            .skills-container {
+                grid-template-columns: 1fr;
+            }
+            .timeline::after {
+                left: 20px;
+            }
+            .timeline-item {
+                width: 100%;
+                padding-left: 50px;
+                padding-right: 0;
+            }
+            .timeline-item.left, .timeline-item.right {
+                left: 0;
+            }
+            .timeline-item::after {
+                left: 10px;
+                right: auto;
+            }
+            .nav-links {
+                display: none; /* 移动端简化，实际可做汉堡菜单 */
+            }
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+        }
+    
+        /* 教育经历 */
+        .education-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            max-width: 880px;
+            margin: 0 auto;
+        }
+        .education-card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 22px 18px 20px;
+            border: 2px dashed var(--line-color);
+            box-shadow:
+                0 0 0 6px var(--mint),
+                0 8px 24px rgba(255, 255, 255, 0.7);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 14px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        /* 学校照片 */
+        .education-photo.polaroid {
+            flex-shrink: 0;
+            width: 104px;
+            padding: 8px 8px 0;
+            background: #ffffff;
+            border-radius: 16px;
+            border: 1px solid rgba(169, 139, 121, 0.25);
+            box-shadow:
+                0 0 0 5px var(--mint),
+                0 8px 18px rgba(169, 139, 121, 0.18);
+            transform: rotate(-2.5deg);
+            transition: transform 0.3s ease;
+        }
+        .education-card:hover .education-photo.polaroid {
+            transform: rotate(0deg) scale(1.04);
+        }
+        .polaroid-img {
+            width: 88px;
+            height: 88px;
+            border-radius: 5px;
+            overflow: hidden;
+            background: var(--bg-color);
+        }
+        .polaroid-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .polaroid-cap {
+            font-family: var(--font-mono);
+            font-size: 0.66rem;
+            color: var(--line-color);
+            text-align: center;
+            padding: 6px 0 8px;
+            letter-spacing: 0.5px;
+        }
+        .education-photo .photo-fallback {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-color);
+        }
+        .education-photo .photo-fallback span {
+            font-family: var(--font-body);
+            font-size: 0.64rem;
+            color: var(--text-sub);
+        }
+        .education-info {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        .education-card:hover {
+            transform: translateY(-4px);
+        }
+        .education-main {
+            width: 100%;
+        }
+        .education-school {
+            margin: 0 0 6px;
+            font-family: var(--font-title);
+            font-weight: 700;
+            font-size: 1.15rem;
+            color: var(--text-main);
+        }
+        .education-major {
+            margin: 0;
+            font-family: var(--font-body);
+            font-size: 0.92rem;
+            color: var(--text-sub);
+        }
+        .education-time {
+            font-family: var(--font-mono);
+            font-size: 0.82rem;
+            color: var(--text-sub);
+            background: var(--bg-color);
+            padding: 6px 14px;
+            border-radius: 20px;
+            white-space: nowrap;
+        }
+        @media (max-width: 720px) {
+            .education-list {
+                grid-template-columns: 1fr;
+                max-width: 420px;
+            }
+        }
+
+    
+        /* 旅行相册 · 轮播样式 */
+        .travel-gallery {
+            margin-top: 10px;
+        }
+        .travel-carousel {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 4 / 3;
+            overflow: hidden;
+            border-radius: var(--border-radius);
+            border: 2px solid var(--line-color);
+            box-shadow: 0 2px 6px rgba(56, 51, 51, 0.08);
+            background: #F4EDE4;
+        }
+        .travel-carousel .travel-track {
+            display: flex;
+            height: 100%;
+            gap: 0;
+            padding: 0;
+            overflow: visible;
+            scroll-snap-type: none;
+            transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+        }
+        .travel-carousel .travel-slide {
+            flex: 0 0 100%;
+            height: 100%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #F4EDE4;
+        }
+        .travel-carousel .travel-slide .shot-frame {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: #F4EDE4;
+        }
+        .travel-carousel .travel-slide img,
+        .travel-carousel .travel-slide .shot-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+        .travel-carousel .travel-slide .shot-empty {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-sub);
+            padding: 12px;
+        }
+        .travel-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 4;
+            width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.82);
+            color: var(--line-color);
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.25s, transform 0.25s;
+        }
+        .travel-arrow:hover { background: #fff; transform: translateY(-50%) scale(1.08); }
+        .travel-arrow.prev { left: 10px; }
+        .travel-arrow.next { right: 10px; }
+        .travel-carousel .travel-dots {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 10px;
+            z-index: 4;
+            display: flex;
+            justify-content: center;
+            gap: 7px;
+            margin-top: 0;
+        }
+        .travel-carousel .travel-dots .t-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.6);
+            border: 1px solid var(--line-color);
+            cursor: pointer;
+            transition: background 0.25s, transform 0.25s;
+        }
+        .travel-carousel .travel-dots .t-dot.active {
+            background: var(--accent-color);
+            transform: scale(1.3);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 顶部导航 -->
+    <header>
+        <nav class="nav-container">
+            <div class="logo">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+                李颖
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home">首页</a></li>
+                <li><a href="#about">关于我</a></li>
+                <li><a href="#skills">技能</a></li>
+                <li><a href="#education">教育经历</a></li>
+                <li><a href="#experience">校园经历</a></li>
+                <li><a href="#journey">旅行与摄影记录</a></li>
+                <li><a href="#contact">联系</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Hero 模块 -->
+        <section id="home" class="hero container">
+            <div class="hero-content">
+                <div class="hero-text fade-in">
+                    <div class="tag">👋 你好，很高兴认识你</div>
+                    <h1>我是 <span class="highlight-pink" style="color: var(--text-main);">李颖</span></h1>
+                    <div class="subtitle">应用心理学本科生 · 数据分析 · 旅游爱好者</div>
+                    <p>性格活泼、外向，擅长做实验设计与数据分析，主观能动性和团队协作能力强；善于借助AI工具，把调研、分析和呈现做得更好。</p>
+                    
+                    <div class="btn-group">
+                        <a href="#contact" class="btn btn-primary">联系我</a>
+                        <a href="#experience" class="btn btn-outline">看看作品</a>
+                    </div>
+
+                    <div class="hero-stats">
+                        <div class="stat-item">
+                            <h3>2</h3>
+                            <p>次见习经历</p>
+                        </div>
+                        <div class="stat-item">
+                            <h3>2</h3>
+                            <p>段项目经历</p>
+                        </div>
+                        <div class="stat-item">
+                            <h3>8</h3>
+                            <p>处旅游地</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hero-image-area fade-in">
+                    <div class="photo-frame">
+                        <p>
+                            <img src="https://a.imgckr.com/2026/10/10/X2tuS.jpg" alt="证件照" border="0" class="photo-frame"
+                            style="width: 100%; height: 100%; object-fit: cover; display: block;"
+                        </p>
+                    </div>
+                    
+                    <!-- 星星装饰 -->
+                    <svg class="deco-svg" width="30" height="30" viewBox="0 0 24 24" fill="#A98B79" style="bottom: 10%; right: 10%;"><path d="M12 2l3 6.2L22 10l-6 6 1.5 7L12 19l-5.5 4L8 16 2 10l7-1.8L12 2z"/></svg>
+                </div>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- 关于我 -->
+        <section id="about" class="section container">
+            <h2 class="section-title fade-in">关于 <span>我</span></h2>
+            <div class="about-grid fade-in">
+                <div class="about-carousel" id="aboutCarousel">
+                    <div class="about-track" id="aboutTrack">
+                        <div class="about-slide">
+                            <span class="slide-tip"></span>
+                            <img src="https://a.imgckr.com/2026/10/10/X2Cbl.jpg" alt="生活照1" border="0" onerror="this.style.display='none'">
+                        </div>
+
+                        <div class="about-slide">
+                            <span class="slide-tip"></span>
+                            <img src="https://a.imgckr.com/2026/10/10/X2Zge.jpg" alt="生活照2" border="0" onerror="this.style.display='none'">
+                        </div>
+                        
+                        <div class="about-slide">
+                            <span class="slide-tip"></span>
+                            <img src="https://a.imgckr.com/2026/10/10/X2qoE.jpg" alt="生活照3" border="0" onerror="this.style.display='none'">
+                        </div>
+
+                        <div class="about-slide">
+                            <span class="slide-tip"></span>
+                            <img src="https://a.imgckr.com/2026/10/10/X2xyu.jpg" alt="生活照4" border="0" onerror="this.style.display='none'">
+                        </div>
+                        
+                    </div>
+                    <button class="about-arrow prev" id="aboutPrev" aria-label="上一张">&#8249;</button>
+                    <button class="about-arrow next" id="aboutNext" aria-label="下一张">&#8250;</button>
+                    <div class="about-dots" id="aboutDots"></div>
+                </div>
+                <div class="about-text">
+                    <h3>你好，我是一名「应用心理学专业大三生」👩‍💻</h3>
+                    <p style="margin-top: 15px; color: var(--text-sub);">
+                        <p>具备基础心理学专业知识，参与srip与挑战杯的项目研究， 熟悉文献搜集、实验设计、数据分析、报告撰写全流程，能踏实完成分配到的工作。</p>
+                        <p>拥有心理团辅助理、志愿服务、家教等多种工作经历，擅长沟通对接，基础资料整理，做事细心且有耐心，学习意愿强。</p>
+                    </p>
+                    
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span>👤</span>
+                            <div>
+                                <strong>姓名</strong>
+                                李颖
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <span>📍</span>
+                            <div>
+                                <strong>所在城市</strong>
+                                浙江省 · 宁波市
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <span>📧</span>
+                            <div>
+                                <strong>邮箱</strong>
+                                1️⃣19557414520@163.com
+                                2️⃣3505167867@qq.com
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <span>📱</span>
+                            <div>
+                                <strong>电话</strong>
+                                1️⃣19557414520
+                                2️⃣13656674839
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <span>🎓</span>
+                            <div>
+                                <strong>学历</strong>
+                                本科 · 宁波大学应用心理学
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <span>💼</span>
+                            <div>
+                                <strong>政治面貌</strong>
+                                共青团员
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- 技能 -->
+        <section id="skills" class="section container">
+            <h2 class="section-title fade-in">我的 <span>技能</span></h2>
+            <div class="skills-container fade-in">
+                <!-- 专业能力 -->
+                <div class="card skill-category">
+                    <h3><span style="background:#E8A8B8; color:#fff; padding:2px 6px; border-radius:4px;">🛠️</span> 心理学专业能力</h3>
+                    
+                    <div class="skill-bar">
+                        <div class="skill-info">
+                            <span>数据统计与分析</span>
+                            <span>85%</span>
+                        </div>
+                        <div class="progress-bg">
+                            <div class="progress-fill" style="width: 85%;"></div>
+                        </div>
+                    </div>
+
+                    <div class="skill-bar">
+                        <div class="skill-info">
+                            <span>心理学实验设计</span>
+                            <span>80%</span>
+                        </div>
+                        <div class="progress-bg">
+                            <div class="progress-fill" style="width: 80%;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="skill-bar">
+                        <div class="skill-info">
+                            <span>文献检索与整理</span>
+                            <span>75%</span>
+                        </div>
+                        <div class="progress-bg">
+                            <div class="progress-fill" style="width: 75%;"></div>
+                        </div>
+                    </div>
+
+                    <div class="skill-bar">
+                        <div class="skill-info">
+                            <span>报告及论文撰写</span>
+                            <span>65%</span>
+                        </div>
+                        <div class="progress-bg">
+                            <div class="progress-fill" style="width: 65%;"></div>
+                        </div>
+                    </div>
+
+                    <div class="skill-bar">
+                        <div class="skill-info">
+                            <span>HTML / CSS</span>
+                            <span>50%</span>
+                        </div>
+                        <div class="progress-bg">
+                            <div class="progress-fill" style="width: 50%;"></div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- 工具与软技能 -->
+                <div class="card skill-category">
+                    <h3><span style="background:#E8A8B8; color:#fff; padding:2px 6px; border-radius:4px;">🧩</span> 工具 & 软技能 & 兴趣点</h3>
+                    <div class="tags-container">
+                        <span class="tag-pill"><b>专业技能：</b>GitHub、R、Matlab、SPSS</span>
+                        <span class="tag-pill"><b>办公技能：</b>WPS、Excel等office套件；Photoshop</span>
+                        <span class="tag-pill"><b>语言水平：</b>普通话水平二甲、英语四六级已通过</span>
+                        <span class="tag-pill"><b>兴趣爱好：</b>摄影、旅游、探店、阅读、看电影</span>
+                        <span class="tag-pill"><b>其他：</b>团队协作、主观能动性、审美在线</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- 教育经历 -->
+        <section id="education" class="section container">
+            <h2 class="section-title fade-in">教育 <span>经历</span></h2>
+            <div class="education-list fade-in">
+                <div class="education-card">
+                    <div class="education-photo polaroid">
+                        <div class="polaroid-img">
+                            <img src="https://a.imgckr.com/2026/10/10/X2SrK.jpg" alt="宁波大学" border="0" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                        </div>
+                    </div>
+                    <div class="education-info">
+                        <div class="education-main">
+                            <h3 class="education-school">宁波大学</h3>
+                            <p class="education-major">本科 · 应用心理学</p>
+                        </div>
+                        <div class="education-time">2024.09 - 2028.06</div>
+                    </div>
+                </div>
+
+                <div class="education-card">
+                    <div class="education-photo polaroid">
+                        <div class="polaroid-img">
+                            <img src="https://a.imgckr.com/2026/10/10/X2klv.jpg" alt="浙江省杭州第十四中学（康桥校区）" border="0" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                        </div>
+                    </div>
+                    <div class="education-info">
+                        <div class="education-main">
+                            <h3 class="education-school">浙江省杭州第十四中学（康桥校区）</h3>
+                            <p class="education-major">高中</p>
+                            <p class="education-major">学生会成员</p>
+                        </div>
+                        <div class="education-time">2021.09 - 2024.06</div>
+                    </div>
+                </div>
+
+                <div class="education-card">
+                    <div class="education-photo polaroid">
+                        <div class="polaroid-img">
+                            <img src="https://a.imgckr.com/2026/10/10/X50qd.jpg" alt="杭州市丁兰实验中学" border="0" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                        </div>
+                    </div>
+                    <div class="education-info">
+                        <div class="education-main">
+                            <h3 class="education-school">杭州市丁兰实验中学</h3>
+                            <p class="education-major">初中</p>
+                            <p class="education-major">班长、校三好学生</p>
+                        </div>
+                        <div class="education-time">2018.09 - 2021.06</div>
+                    </div>
+                </div>
+
+                <div class="education-card">
+                    <div class="education-photo polaroid">
+                        <div class="polaroid-img">
+                            <img src="https://a.imgckr.com/2026/10/10/X5J3F.jpg" alt="杭州市乔司中心小学大井校区" border="0" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                        </div>
+                    </div>
+                    <div class="education-info">
+                        <div class="education-main">
+                            <h3 class="education-school">杭州市乔司中心小学大井校区</h3>
+                            <p class="education-major">小学</p>
+                            <p class="education-major">班长、校三好学生</p>
+                        </div>
+                        <div class="education-time">2012.09 - 2018.06</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- 校园经历 -->
+        <section id="experience" class="section container">
+            <h2 class="section-title fade-in">大学期间<span>校园经历</span></h2>
+
+            <div class="exp-category fade-in">
+                <h3 class="exp-category-title">校园职务</h3>
+                <div class="portfolio-grid">
+                    <div class="project-card">
+                        <div class="project-content">
+                            <h2>阳明学院领航工作室——干事</h2>
+                            <p>参与党务日常事务与公众号文本撰写工作，在党务活动期间负责部门间沟通对接、活动统筹与资料整理的任务，实现目标达成率100%。</p>
+                            <div class="project-tags">
+                                <span class="mini-tag">办公室优秀干事</span>
+                                <span class="mini-tag">活动组织</span>
+                                <span class="mini-tag">文本撰写</span>
+                                <span class="mini-tag">沟通协调</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-card">
+                        <div class="project-content">
+                            <h2>舒心坊——数据助理</h2>
+                            <p>协助进行心理健康测评数据的收集、整理与分析工作，确保数据的准确性和完整性。</p>
+                            <div class="project-tags">
+                                <span class="mini-tag">心理健康中心</span>
+                                <span class="mini-tag">数据录入</span>
+                                <span class="mini-tag">整理分析</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-card">
+                        <div class="project-content">
+                            <h2>应心242班——舆情委员</h2>
+                            <p>追踪时事热点，并关注校内及班内同学的言论变化，并将结果整理成月报。</p>
+                            <div class="project-tags">
+                                <span class="mini-tag">时事热点</span>
+                                <span class="mini-tag">小小班委</span>
+                                <span class="mini-tag">大一期间</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="exp-category fade-in">
+                <h3 class="exp-category-title">科研经历</h3>
+                <div class="portfolio-grid">
+                <div class="project-card">
+                   <div class="project-content">
+                        <h2>积极老龄化视角下银发族智能媒介使用与社会融入的互动机制研究</h2>
+                        <p ><b><mark>项目简介：</mark></b>本项目聚焦我国深度老龄化背景下的"银发数字困境"。
+                            <p style="text-indent: 2em;">截至 2023 年末，全国 60 周岁及以上老年人口已达 2.97 亿（占总人口 21.1%），老年群体因身体机能、经济条件与观念差异，在智能媒介使用中面临操作难、信息获取滞后、社交孤立等问题，易在数字时代被边缘化。项目以<b>"积极老龄化"理念</b>为指引，围绕健康、参与、保障三大维度，重点研究智能媒介使用与老年人社会融入的双向互动关系，并探讨数字鸿沟的制约作用，<u>最终目标是提升银发族在信息化时代的社会参与度、幸福感与生活质量。</u></p>
+                            <p style="text-indent: 2em;">研究采取<b>“理论 + 实证研究”双线并行</b>的策略。理论层面梳理银发族智能媒介使用状况，与其他城市进行横向比较，剖析使用动机、频率、内容偏好及其与社会融入的互动关联；实证层面通过问卷设计与深度访谈采集乡村老年人的一手数据，并使用SPSS进行方差分析与回归分析。<u>项目的主要创新点在于：将智能媒介使用与银发族社会融入相结合，从社会环境特点出发探索适配模式，强调依据老年人真实需求定制个性化、可落地的融入促进方案，从而实现需求与供给对接。</u></p>
+                            <p style="text-indent: 2em;">项目研究成果形成《银发族智能媒介使用与社会融入调查问卷》与配套调研报告，可为银发族提升社会融入提供方法和理论上的指导，为社会组织设计<b>适老培训课程</b>、为政府<b>数字化养老政策</b>的制定提供参考依据，同时为智能媒介的<b>“银发友好”型系统研发</b>提供方向。</p>
+                            <p><b><mark>负责部分：</mark></b>围绕项目主题，负责<b>调研及数据分析工作</b>。使用SPSS和Python完成问卷数据的统计和分析，并输出10页数据分析报告，体现工具使用、研究分析、逻辑表达等能力。</p>
+                        <div class="project-tags">
+                            <span class="mini-tag">校重点Srip</span>
+                            <span class="mini-tag">问卷测量</span>
+                            <span class="mini-tag">个案访谈</span>
+                            <span class="mini-tag">积极老龄化</span>
+                            <span class="mini-tag">项目成员</span>
+                        </div>
+                        <br>
+                        <div><img src="https://a.imgckr.com/2026/10/22/XgAXR.jpg" alt="银发族srip结题证书" width="450px" height="300px"></div>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-content">
+                        <h2>情境因素对智能体面孔情绪和信息加工的影响</h2>
+                        <p ><b><mark>项目简介：</mark></b>本项目聚焦智能体日益普及却"表情易被误读"的现实困境。
+                            <p style="text-indent: 2em;">随着国家“人工智能+”行动推进，具备拟人化面孔的智能体加速进入客服、教育、康养、情感陪伴等领域，但其情感表达多建立在标准化、去情境化的表情库上，与人类固有的"情境化解读"模式相矛盾，容易引发误解与不信任。项目以<b>情境认知范式和情绪维度理论</b>为基础，<u>重点研究人类如何理解智能体的情绪表达，而非机器如何识别人类情绪。</u></p>
+                            <p style="text-indent: 2em;">研究将情境因素拆解为“效价（积极/消极）”与“唤醒度（高/低）”两个维度，<b>采用 2（情境效价）×2（情境唤醒度）×3（智能体面孔情绪：积极/中性/消极）的多因素被试内实验设计</b>，以反应时和正确率为核心行为指标，<u>系统检验三项假设：面孔情绪与情境效价的主效应、二者的一致性交互效应，以及情境唤醒度的调节作用。</u></p>
+                            <p style="text-indent: 2em;">项目的主要创新点在于：研究对象从传统的人类面孔转向智能体面孔，拓展了面孔情绪加工的研究视角；同时纳入效价与唤醒度双维度，使情境分析更精细化,<u>为智能体表情设计与优化提供可实证的依据。</u></p>
+                            <p style="text-indent: 2em;">研究成果预计形成《智能体面孔情绪信息加工中的情境效应与情绪唤醒度评估问卷》与《人机交互中智能体面孔情绪识别的情境影响因素调查报告》，可为智能体情感交互设计提供参考。</p>
+                            <p><b><mark>负责部分：</mark></b>作为负责人统筹项目进程，并主要负责<b>实验设计板块</b>，通过大量检索文献以确定研究的具体方向，使用PsychoPy程序来实现实验设计的落地和可操作化。</p>
+                        <div class="project-tags">
+                            <span class="mini-tag">院Srip</span>
+                            <span class="mini-tag">SAM量表</span>
+                            <span class="mini-tag">行为反应实验</span>
+                            <span class="mini-tag">人工智能</span>
+                            <span class="mini-tag">情绪面孔</span>
+                            <span class="mini-tag">项目负责人</span>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+
+            <div class="exp-category fade-in">
+                <h3 class="exp-category-title">实践经历</h3>
+                <div class="portfolio-grid">
+                    <div class="project-card">
+                        <div class="project-content">
+                            <h2>志愿服务</h2>
+                            <p>积极报名参加在校以及社区志愿，包括秩序维护、体检数据录入、社区托管等多项工作，负责现场服务与流程支持。</p>
+                            <div class="project-tags">
+                                <span class="mini-tag">志愿</span>
+                                <span class="mini-tag">活动流程</span>
+                            </div>
+                        <br>
+                        <div class="project-img"><img src="https://a.imgckr.com/2026/10/22/XgYZM.png" alt="志愿配图"></div>
+                        </div>
+                    </div>
+                    <div class="project-card">
+                        <div class="project-content">
+                            <h2>兼职</h2>
+                            <p>拥有3段以上家教经历，负责基础资料整理、一对一辅导、事后复盘，善于沟通，做事细心、学习意愿强。</p>
+                            <div class="project-tags">
+                                <span class="mini-tag">家教</span>
+                                <span class="mini-tag">兼职</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-card">
+                        <div class="project-content">
+                            <h2>见习</h2>
+                            <p>参与2次心理团辅活动，配合主讲人完成团辅工作，活动期间承担摄影以及记录任务；活动后与家长及学生进行沟通，并将结果及时反馈给心理咨询师，积累一线实践经验。</p>
+                            <div class="project-tags">
+                                <span class="mini-tag">心理团辅</span>
+                                <span class="mini-tag">事后复盘与资料整理</span>
+                            </div>
+                        <br>
+                        <div class="project-img"><img src="https://a.imgckr.com/2026/10/22/XgUHU.png" alt="心理团辅配图"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <div class="divider"></div>
+
+        <!-- 经历 -->
+        <section id="journey" class="section container">
+            <h2 class="section-title fade-in">旅行 & 摄影<span>记录</span></h2>
+            <div class="timeline fade-in">
+                
+                <div class="timeline-item left">
+                    <div class="timeline-content">
+                        <span class="timeline-date">2024.6 </span>
+                        <h3>浙江·义乌</h3>
+                    <div class="travel-gallery">
+                    <div class="travel-carousel">
+                        <div class="travel-track">
+                            <div class="travel-slide"><div class="shot-frame"><img src="https://a.imgckr.com/2026/10/10/X5cmi.jpg" alt="义乌" border="0" loading="lazy"><span class="shot-empty"></span></div></div>
+                            <div class="travel-slide"><div class="shot-frame"><img src="https://a.imgckr.com/2026/10/10/X5igy.jpg" alt="义乌" border="0" loading="lazy"><span class="shot-empty"></span></div></div>
+                            <div class="travel-slide"><div class="shot-frame"><img src="https://a.imgckr.com/2026/10/10/X5UY8.jpg" alt="义乌" border="0" loading="lazy"><span class="shot-empty"></span></div></div>
+                        </div>
+                        <button type="button" class="travel-arrow prev" aria-label="上一张">&#8249;</button>
+                        <button type="button" class="travel-arrow next" aria-label="下一张">&#8250;</button>
+                        <div class="travel-dots"></div>
+                    </div>
+                </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item right">
+                    <div class="timeline-content">
+                        <span class="timeline-date">2024.8</span>
+                        <h3>陕西·西安</h3>
+                    <div class="travel-gallery">
+                    <div class="travel-carousel">
+                        <div class="travel-track">
+                            <div class="travel-slide"><div class="shot-frame"><img src="https://a.imgckr.com/2026/10/10/X5YF0.jpg" alt="西安" border="0" loading="lazy"><span class="shot-empty"></span></div></div>
+                            <div class="travel-slide"><div class="shot-frame"><img src="https://a.imgckr.com/2026/10/10/X5XBn.jpg" alt="西安" border="0" loading="lazy"><span class="shot-empty"></span></div></div>
+                            <div class="travel-slide"><div class="shot-frame"><img src="https://a.imgckr.com/2026/10/10/X5jr7.jpg" alt="西安" border="0" loading="lazy"><span class="shot-empty"></span></div></div>
+                        </div>
+                        <button type="button" class="travel-arrow prev" aria-label="上一张">&#8249;</button>
+                        <button type="button" class="travel-arrow next" aria-label="下一张">&#8250;</button>
+                        <div class="travel-dots"></div>
+                    </div>
+                </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item left">
+                    <div class="timeline-content">
+                        <span class="timeline-date">2025.5</span>
+                        <h3>江苏·南京</h3>
+                    <div class="travel-gallery">
+                    <div class="travel-carousel">
+                        <div class="travel-track">
+                            <div class="travel-slide"><div class="shot-frame"><img src="https://a.imgckr.com/2026/10/10/X5ulf.jpg" alt="南京" border="0" loading="lazy"><span class="shot-empty"></span></div></div>
+                            <div class="travel-slide"><div class="shot-frame"><img src="https://a.imgckr.com/2026/10/10/X5O3h.jpg" alt="南京" border="0" loading="lazy"><span class="shot-empty"></span></div></div>
+                            <div class="travel-slide"><div class="shot-frame"><img src="https://a.imgckr.com/2026/10/10/X5TtX.jpg" alt="南京" border="0" loading="lazy"><span class="shot-empty"></span></div></div>
+                            <div class="travel-slide"><div class="shot-frame"><img src="https://a.imgckr.com/2026/10/10/X53xL.jpg" alt="南京" border="0" loading="lazy"><span class="shot-empty"></span></div></div>
+                        </div>
+                        <button type="button" class="travel-arrow prev" aria-label="上一张">&#8249;</button>
+                        <button type="button" class="travel-arrow next" aria-label="下一张">&#8250;</button>
+                        <div class="travel-dots"></div>
+                    </div>
+                </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item right">
+                    <div class="timeline-content">
+                        <span class="timeline-date">2025.7</span>
+                        <h3>福建·厦门</h3>
+                    <div class="travel-gallery">
+                    <div class="travel-carousel">
+                        <div class="travel-track">
+                            <div class="travel-slide"><div class="shot-frame"><img src="https://a.imgckr.com/2026/10/10/X5sFa.jpg" alt="厦门" border="0" loading="lazy"><span class="shot-empty"></span></div></div>
+                            <div class="travel-slide"><div class="shot-frame"><img src="https://a.imgckr.com/2026/10/10/X5PBM.jpg" alt="厦门" border="0" loading="lazy"><span class="shot-empty"></span></div></div>
+                            <div class="travel-slide"><div class="shot-frame"><img src="https://a.imgckr.com/2026/10/10/X5o2J.jpg" alt="厦门" border="0" loading="lazy"><span class="shot-empty"></span></div></div>
+                            <div class="travel-slide"><div class="shot-frame"><img src="https://a.imgckr.com/2026/10/10/X5zDU.jpg" alt="厦门" border="0" loading="lazy"><span class="shot-empty"></span></div></div>
+                        </div>
+                        <button type="button" class="travel-arrow prev" aria-label="上一张">&#8249;</button>
+                        <button type="button" class="travel-arrow next" aria-label="下一张">&#8250;</button>
+                        <div class="travel-dots"></div>
+                    </div>
+                </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item left">
+                    <div class="timeline-content">
+                        <span class="timeline-date">2025.8</span>
+                        <h3>福建·泉州</h3>
+                    <div class="travel-gallery">
+                    <div class="travel-carousel">
+                        <div class="travel-track">
+                            <div class="travel-slide"><div class="shot-frame"><img src="https://a.imgckr.com/2026/10/10/X5FxG.jpg" alt="泉州" border="0" loading="lazy"><span class="shot-empty"></span></div></div>
+                            <div class="travel-slide"><div class="shot-frame"><img src="https://a.imgckr.com/2026/10/10/X5aLs.jpg" alt="泉州" border="0" loading="lazy"><span class="shot-empty"></span></div></div>
+                        </div>
+                        <button type="button" class="travel-arrow prev" aria-label="上一张">&#8249;</button>
+                        <button type="button" class="travel-arrow next" aria-label="下一张">&#8250;</button>
+                        <div class="travel-dots"></div>
+                    </div>
+                </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item left">
+                    <div class="timeline-content">
+                        <span class="timeline-date">2025.8</span>
+                        <h3>浙江·舟山</h3>
+                    <div class="travel-gallery">
+                    <div class="travel-carousel">
+                        <div class="travel-track">
+                            <div class="travel-slide"><div class="shot-frame"><img src="https://a.imgckr.com/2026/10/10/X51mS.jpg" alt="舟山" border="0" loading="lazy"><span class="shot-empty"></span></div></div>
+                            <div class="travel-slide"><div class="shot-frame"><img src="https://a.imgckr.com/2026/10/10/X5Ktl.jpg" alt="舟山" border="0" loading="lazy"><span class="shot-empty"></span></div></div>
+                            <div class="travel-slide"><div class="shot-frame"><img src="https://a.imgckr.com/2026/10/10/X5mve.jpg" alt="舟山" border="0" loading="lazy"><span class="shot-empty"></span></div></div>
+                            <div class="travel-slide"><div class="shot-frame"><img src="https://a.imgckr.com/2026/10/10/X54Fq.jpg" alt="X舟山" border="0" loading="lazy"><span class="shot-empty"></span></div></div>
+                        </div>
+                        <button type="button" class="travel-arrow prev" aria-label="上一张">&#8249;</button>
+                        <button type="button" class="travel-arrow next" aria-label="下一张">&#8250;</button>
+                        <div class="travel-dots"></div>
+                    </div>
+                </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item right">
+                    <div class="timeline-content">
+                        <span class="timeline-date">2026.1</span>
+                        <h3>天津</h3>
+                    <div class="travel-gallery">
+                    <div class="travel-carousel">
+                        <div class="travel-track">
+                            <div class="travel-slide"><div class="shot-frame"><img src="https://a.imgckr.com/2026/10/10/X5EDE.jpg" alt="天津" border="0" loading="lazy"><span class="shot-empty"></span></div></div>
+                            <div class="travel-slide"><div class="shot-frame"><img src="https://a.imgckr.com/2026/10/10/X5fJu.jpg" alt="天津" border="0" loading="lazy"><span class="shot-empty"></span></div></div>
+                            <div class="travel-slide"><div class="shot-frame"><img src="https://a.imgckr.com/2026/10/10/X5wsC.jpg" alt="天津" border="0" loading="lazy"><span class="shot-empty"></span></div></div>
+                        </div>
+                        <button type="button" class="travel-arrow prev" aria-label="上一张">&#8249;</button>
+                        <button type="button" class="travel-arrow next" aria-label="下一张">&#8250;</button>
+                        <div class="travel-dots"></div>
+                    </div>
+                </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item left">
+                    <div class="timeline-content">
+                        <span class="timeline-date">2026.2</span>
+                        <h3>山东·烟台</h3>
+                    <div class="travel-gallery">
+                    <div class="travel-carousel">
+                        <div class="travel-track">
+                            <div class="travel-slide"><div class="shot-frame"><img src="https://a.imgckr.com/2026/10/10/X5G4F.jpg" alt="烟台" border="0" loading="lazy"><span class="shot-empty"></span></div></div>
+                            <div class="travel-slide"><div class="shot-frame"><img src="https://a.imgckr.com/2026/10/10/X5Dvy.jpg" alt="烟台" border="0" loading="lazy"><span class="shot-empty"></span></div></div>
+                            <div class="travel-slide"><div class="shot-frame"><img src="https://a.imgckr.com/2026/10/10/X5MW8.jpg" alt="烟台" border="0" loading="lazy"><span class="shot-empty"></span></div></div>
+                            <div class="travel-slide"><div class="shot-frame"><img src="https://a.imgckr.com/2026/10/10/X5VCi.jpg" alt="烟台" border="0" loading="lazy"><span class="shot-empty"></span></div></div>
+                        </div>
+                        <button type="button" class="travel-arrow prev" aria-label="上一张">&#8249;</button>
+                        <button type="button" class="travel-arrow next" aria-label="下一张">&#8250;</button>
+                        <div class="travel-dots"></div>
+                    </div>
+                </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item right">
+                    <div class="timeline-content">
+                        <span class="timeline-date">2026.8</span>
+                        <h3>北京</h3>
+                    <div class="travel-gallery">
+                    <div class="travel-carousel">
+                        <div class="travel-track">
+                            <div class="travel-slide"><div class="shot-frame"><img src="https://a.imgckr.com/2026/10/10/X5hOL.jpg" alt="北京" border="0"><span class="shot-empty"></span></div></div>
+                            <div class="travel-slide"><div class="shot-frame"><img src="https://a.imgckr.com/2026/10/10/X5NM0.jpg" alt="北京" border="0"><span class="shot-empty"></span></div></div>
+                            <div class="travel-slide"><div class="shot-frame"><img src="https://a.imgckr.com/2026/10/10/X5IJ5.jpg" alt="北京" border="0" loading="lazy"><span class="shot-empty"></span></div></div>
+                            <div class="travel-slide"><div class="shot-frame"><img src="https://a.imgckr.com/2026/10/10/X5gzn.jpg" alt="北京" border="0" loading="lazy"><span class="shot-empty"></span></div></div>
+                        </div>
+                        <button type="button" class="travel-arrow prev" aria-label="上一张">&#8249;</button>
+                        <button type="button" class="travel-arrow next" aria-label="下一张">&#8250;</button>
+                        <div class="travel-dots"></div>
+                    </div>
+                </div>
+                    </div>
+                </div>
+                
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+
+        <!-- 联系 -->
+        <section id="contact" class="section container">
+            <div class="card contact-card fade-in">
+                <h2 style="font-family: var(--font-title); color: var(--text-main); margin-bottom: 10px;">让我们保持联系吧 💌</h2>
+                <p style="color: var(--text-sub); margin-bottom: 20px;">如果你对我的经历感兴趣，或者想聊聊合作，欢迎随时找我 ~</p>
+                
+                <div class="contact-links">
+                    <a href="#" class="contact-link">📧 19557414520@163.com</a>
+                    <a href="#" class="contact-link">📱 195 5741 4520</a>
+                    <a href="#" class="contact-link">💬 微信:Delancey0110 </a>
+                    <a href="#" class="contact-link">🐱 github.com/Yixixi111</a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <div class="divider"></div>
+
+    <footer>
+        <div class="container">
+            <p>@ 2026 李颖 </p>
+            <p style="margin-top: 5px; font-size: 0.7rem;">Keep your spirit free</p>
+        </div>
+    </footer>
+
+    <!-- 脚本：处理滚动动画和导航平滑跳转 -->
+    <script>
+        // 1. 滚动渐入动画 (Intersection Observer)
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target); // 只触发一次
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // 2. 导航平滑跳转
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    
+        // 关于我 · 照片轮播逻辑
+        (function () {
+            var carousel = document.getElementById('aboutCarousel');
+            if (!carousel) return;
+            var track = document.getElementById('aboutTrack');
+            var slides = track.children;
+            var total = slides.length;
+            var dotsWrap = document.getElementById('aboutDots');
+            var idx = 0;
+            var timer = null;
+            var INTERVAL = 3500;
+
+            for (var i = 0; i < total; i++) {
+                var dot = document.createElement('span');
+                dot.className = 'about-dot' + (i === 0 ? ' active' : '');
+                dot.setAttribute('data-index', i);
+                dot.addEventListener('click', function () {
+                    go(parseInt(this.getAttribute('data-index'), 10));
+                    restart();
+                });
+                dotsWrap.appendChild(dot);
+            }
+
+            function go(n) {
+                idx = (n + total) % total;
+                track.style.transform = 'translateX(-' + (idx * 100) + '%)';
+                var dots = dotsWrap.children;
+                for (var j = 0; j < dots.length; j++) {
+                    dots[j].classList.toggle('active', j === idx);
+                }
+            }
+
+            function next() { go(idx + 1); }
+            function prev() { go(idx - 1); }
+
+            function start() { timer = setInterval(next, INTERVAL); }
+            function stop() { if (timer) { clearInterval(timer); timer = null; } }
+            function restart() { stop(); start(); }
+
+            document.getElementById('aboutNext').addEventListener('click', function () { next(); restart(); });
+            document.getElementById('aboutPrev').addEventListener('click', function () { prev(); restart(); });
+
+            carousel.addEventListener('mouseenter', stop);
+            carousel.addEventListener('mouseleave', start);
+            carousel.addEventListener('touchstart', stop, { passive: true });
+
+            start();
+        })();
+
+    
+
+        // 旅行相册 · 轮播逻辑（与“关于我”同款：箭头 + 圆点 + 自动播放 + 悬停暂停）
+        (function () {
+            var carousels = document.querySelectorAll('.travel-carousel');
+            var INTERVAL = 3500;
+            Array.prototype.forEach.call(carousels, function (carousel) {
+                var track = carousel.querySelector('.travel-track');
+                var dotsWrap = carousel.querySelector('.travel-dots');
+                if (!track || !dotsWrap) return;
+                var slides = Array.prototype.slice.call(track.querySelectorAll('.travel-slide'));
+                var total = slides.length;
+                if (total === 0) return;
+                var prevBtn = carousel.querySelector('.travel-arrow.prev');
+                var nextBtn = carousel.querySelector('.travel-arrow.next');
+                var idx = 0;
+                var timer = null;
+                dotsWrap.innerHTML = '';
+                var dots = [];
+                slides.forEach(function (s, i) {
+                    var dot = document.createElement('span');
+                    dot.className = 't-dot' + (i === 0 ? ' active' : '');
+                    dot.setAttribute('data-index', String(i));
+                    dot.addEventListener('click', function () {
+                        go(parseInt(dot.getAttribute('data-index'), 10));
+                        restart();
+                    });
+                    dotsWrap.appendChild(dot);
+                    dots.push(dot);
+                });
+                function go(n) {
+                    idx = ((n % total) + total) % total;
+                    track.style.transform = 'translateX(-' + (idx * 100) + '%)';
+                    dots.forEach(function (d, j) { d.classList.toggle('active', j === idx); });
+                }
+                function next() { go(idx + 1); }
+                function prev() { go(idx - 1); }
+                function start() { if (total > 1) timer = setInterval(next, INTERVAL); }
+                function stop() { if (timer) { clearInterval(timer); timer = null; } }
+                function restart() { stop(); start(); }
+                if (nextBtn) nextBtn.addEventListener('click', function () { next(); restart(); });
+                if (prevBtn) prevBtn.addEventListener('click', function () { prev(); restart(); });
+                carousel.addEventListener('mouseenter', stop);
+                carousel.addEventListener('mouseleave', start);
+                carousel.addEventListener('touchstart', stop, { passive: true });
+                start();
+            });
+        })();
+    </script>
+</body>
+</html>
